@@ -13,7 +13,7 @@ from sklearn.ensemble import IsolationForest
 from tqdm import tqdm
 from multiprocessing import Pool
 from torch.utils.data import DataLoader
-from torch_geometric.loader import DataLoader as pyGDataLoader
+# from torch_geometric.loader import DataLoader as pyGDataLoader
 from algorithms import net_torch
 
 
@@ -287,15 +287,15 @@ class DIF:
                     batch_x = batch_x.float().to(self.device)
                     batch_x_reduced = net(batch_x)
                     x_reduced.append(batch_x_reduced)
-            else:
-                loader = pyGDataLoader(X, batch_size=self.batch_size, shuffle=False, pin_memory=True, drop_last=False)
-                for data in loader:
-                    data.to(self.device)
-                    x, edge_index, batch = data.x, data.edge_index, data.batch
-                    if x is None:
-                        x = torch.ones((batch.shape[0], 1)).to(self.device)
-                    x, _ = net(x, edge_index, batch)
-                    x_reduced.append(x)
+            # else:
+            #     loader = pyGDataLoader(X, batch_size=self.batch_size, shuffle=False, pin_memory=True, drop_last=False)
+            #     for data in loader:
+            #         data.to(self.device)
+            #         x, edge_index, batch = data.x, data.edge_index, data.batch
+            #         if x is None:
+            #             x = torch.ones((batch.shape[0], 1)).to(self.device)
+            #         x, _ = net(x, edge_index, batch)
+            #         x_reduced.append(x)
 
         x_reduced = torch.cat(x_reduced).data.cpu().numpy()
         x_reduced = StandardScaler().fit_transform(x_reduced)

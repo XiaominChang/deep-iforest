@@ -6,7 +6,7 @@
 
 import numpy as np
 import torch
-import torch_geometric
+# import torch_geometric
 from torch.nn import functional as F
 
 
@@ -43,16 +43,16 @@ def choose_act_func(activation):
     return act_module, act_f
 
 
-def choose_pooling_func(pooling):
-    if pooling == 'sum':
-        pool_f = torch_geometric.nn.global_add_pool
-    elif pooling == 'mean':
-        pool_f = torch_geometric.nn.global_mean_pool
-    elif pooling == 'max':
-        pool_f = torch_geometric.nn.global_max_pool
-    else:
-        raise NotImplementedError('')
-    return pool_f
+# def choose_pooling_func(pooling):
+#     if pooling == 'sum':
+#         pool_f = torch_geometric.nn.global_add_pool
+#     elif pooling == 'mean':
+#         pool_f = torch_geometric.nn.global_mean_pool
+#     elif pooling == 'max':
+#         pool_f = torch_geometric.nn.global_max_pool
+#     else:
+#         raise NotImplementedError('')
+#     return pool_f
 
 
 class MLPnet(torch.nn.Module):
@@ -313,20 +313,20 @@ class GinEncoderGraph(torch.nn.Module):
         self.bns = torch.nn.ModuleList()
 
         self.act_module, self.act_f = choose_act_func(activation)
-        self.pool_f = choose_pooling_func(pooling)
-
-        for i in range(self.num_gc_layers):
-            in_channel = n_features if i == 0 else n_hidden
-            out_channel = n_emb if i == n_layers-1 else n_hidden
-            nn = torch.nn.Sequential(
-                torch.nn.Linear(in_channel, n_hidden, bias=False),
-                self.act_module,
-                torch.nn.Linear(n_hidden, out_channel, bias=False)
-            )
-            conv = torch_geometric.nn.GINConv(nn)
-            bn = torch.nn.BatchNorm1d(out_channel)
-            self.convs.append(conv)
-            self.bns.append(bn)
+        # self.pool_f = choose_pooling_func(pooling)
+        #
+        # for i in range(self.num_gc_layers):
+        #     in_channel = n_features if i == 0 else n_hidden
+        #     out_channel = n_emb if i == n_layers-1 else n_hidden
+        #     nn = torch.nn.Sequential(
+        #         torch.nn.Linear(in_channel, n_hidden, bias=False),
+        #         self.act_module,
+        #         torch.nn.Linear(n_hidden, out_channel, bias=False)
+        #     )
+        #     conv = torch_geometric.nn.GINConv(nn)
+        #     bn = torch.nn.BatchNorm1d(out_channel)
+        #     self.convs.append(conv)
+        #     self.bns.append(bn)
 
     def forward(self, x, edge_index, batch):
         xs = []
